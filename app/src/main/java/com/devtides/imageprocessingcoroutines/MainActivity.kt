@@ -37,13 +37,13 @@ class MainActivity : AppCompatActivity() {
             coroutineScope.launch {
                 val bitmap = when {
                     toggleFilter -> {
-                        val deferredBitmap = coroutineScope.async(Dispatchers.Default) {
-                            Filter.apply(originalBitmap!!)
-                        }
+                        val deferredBitmap =
+                            coroutineScope.async(Dispatchers.Default) { Filter.apply(originalBitmap!!) }
                         deferredBitmap.await()
                     }
                     else -> {
-                        originalBitmap!!
+                        requireNotNull(originalBitmap,
+                            { "Original Image is not loaded from network" })
                     }
                 }
                 toggleFilter = !toggleFilter
@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
 
     private fun getOriginalBitmap() = URL(IMAGE_URL).openStream().use {
         BitmapFactory.decodeStream(it)
