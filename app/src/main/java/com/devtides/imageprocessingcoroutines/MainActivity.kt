@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     private val IMAGE_URL =
         "https://raw.githubusercontent.com/DevTides/JetpackDogsApp/master/app/src/main/res/drawable/dog.png"
+    private var originalBitmap: Bitmap? = null
+    private var toggleFilter = true
 
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -27,8 +29,27 @@ class MainActivity : AppCompatActivity() {
             val deferredBitmap = coroutineScope.async(Dispatchers.IO) {
                 getOriginalBitmap()
             }
-            val bitmap = deferredBitmap.await()
-            loadImage(bitmap)
+            originalBitmap = deferredBitmap.await()
+            loadImage(originalBitmap!!)
+        }
+
+        imageView.setOnClickListener {
+            coroutineScope.launch {
+                val bitmap = when {
+                    toggleFilter -> {
+                        val deferredBitmap = coroutineScope.async(Dispatchers.Default) {
+                            Filter.apply(originalBitmap!!)
+                        }
+                        deferredBitmap.await()
+                    }
+                    else -> {
+                        originalBitmap!!
+                    }
+                }
+                toggleFilter = !toggleFilter
+                loadImage(bitmap)
+
+            }
         }
 
     }
