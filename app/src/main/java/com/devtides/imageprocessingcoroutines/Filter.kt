@@ -5,17 +5,17 @@ import android.graphics.Color
 
 object Filter {
 
-    fun apply(source: Bitmap): Bitmap {
-        val width = source.width
-        val height = source.height
-        val pixels = IntArray(width * height)
-        // get pixel array from source
-        source.getPixels(pixels, 0, width, 0, 0, width, height)
+   suspend fun apply(source: Bitmap): Bitmap {
+       val width = source.width
+       val height = source.height
+       val pixels = IntArray(width * height)
+       // get pixel array from source
+       source.getPixels(pixels, 0, width, 0, 0, width, height)
 
-        var R: Int
-        var G: Int
-        var B: Int
-        var index: Int
+       var R: Int
+       var G: Int
+       var B: Int
+       var index: Int
         var threshHold: Int
 
         for (y in 0 until height) {

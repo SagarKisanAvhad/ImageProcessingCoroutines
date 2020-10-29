@@ -55,8 +55,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun getOriginalBitmap() = URL(IMAGE_URL).openStream().use {
-        BitmapFactory.decodeStream(it)
+    private suspend fun getOriginalBitmap(): Bitmap {
+        return URL(IMAGE_URL).openStream().use {
+            BitmapFactory.decodeStream(it)
+        }
     }
 
     private fun loadImage(bmp: Bitmap) {
